@@ -50,7 +50,6 @@ const App = () => {
         throw new Error('Failled to fetch movies');
       }
       const data = await response.json();
-      console.log(data);
 
       if (data.response === 'False') {
         setErrorMessage(data.Error || 'Failed to Fetch Movies');
