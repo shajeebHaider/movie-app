@@ -5,6 +5,7 @@ import { Spinner } from './components/Spinner';
 import { MovieCard } from './components/MovieCard';
 import { useDebounce } from 'react-use';
 import { getTrendingMovies, updateSearchCount } from './appwrite';
+import { Modal } from './components/Modal';
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -31,6 +32,8 @@ const App = () => {
 
   const [trendingMovies, setTrendingMovies] = useState([]);
 
+  const [selectedMovie, setSelectedMovie] = useState(null); // State for selected movie
+
   useDebounce(() => setDebounceSearchTerm(searchTerm), 500, [searchTerm]);
 
   const fetchMovies = async (query = '') => {
@@ -47,6 +50,7 @@ const App = () => {
         throw new Error('Failled to fetch movies');
       }
       const data = await response.json();
+      console.log(data);
 
       if (data.response === 'False') {
         setErrorMessage(data.Error || 'Failed to Fetch Movies');
@@ -84,6 +88,15 @@ const App = () => {
     loadTrendingMovies();
   }, []);
 
+  const handleMovieClick = movie => {
+    setSelectedMovie(movie);
+  };
+
+  // Handler to close the modal
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+  };
+
   return (
     <main>
       <div className="pattern" />
@@ -96,7 +109,6 @@ const App = () => {
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
         <h1 className="text-white">{searchTerm}</h1>
-
         {trendingMovies.length > 0 && (
           <section className="trending">
             <h2>Trending Movies</h2>
@@ -110,7 +122,6 @@ const App = () => {
             </ul>
           </section>
         )}
-
         <section className="all-movies">
           <h2>All Movies</h2>
 
@@ -123,11 +134,14 @@ const App = () => {
           ) : (
             <ul>
               {movieList.map(movie => (
-                <MovieCard key={movie.id} movie={movie} />
+                <li key={movie.id} onClick={() => handleMovieClick(movie)}>
+                  <MovieCard movie={movie} />
+                </li>
               ))}
             </ul>
           )}
         </section>
+        {selectedMovie && <Modal movie={selectedMovie} onClose={handleCloseModal} />}
       </div>
     </main>
   );
