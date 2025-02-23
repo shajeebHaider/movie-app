@@ -71,12 +71,15 @@ const App = () => {
   };
 
   const loadTrendingMovies = async () => {
+    setIsLoading(true);
     try {
       const movies = await getTrendingMovies();
 
       setTrendingMovies(movies);
     } catch (error) {
       console.error(`Error Fetching Movies: ${error}`);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -111,14 +114,18 @@ const App = () => {
         {trendingMovies.length > 0 && (
           <section className="trending">
             <h2>Trending Movies</h2>
-            <ul>
-              {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
-                  <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.title}></img>
-                </li>
-              ))}
-            </ul>
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <ul>
+                {trendingMovies.map((movie, index) => (
+                  <li key={movie.$id}>
+                    <p>{index + 1}</p>
+                    <img src={movie.poster_url} alt={movie.title}></img>
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
         )}
         <section className="all-movies">
