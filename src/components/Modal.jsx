@@ -27,7 +27,7 @@ export const Modal = ({
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div
-        className="flex max-w-sm w-full bg-white shadow-md rounded-lg overflow-hidden mx-auto "
+        className="flex max-w-sm w-full shadow-md rounded-lg overflow-hidden mx-auto "
         onClick={handleContentClick}
       >
         <div className="w-2 bg-gray-800"></div>
